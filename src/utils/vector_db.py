@@ -302,6 +302,17 @@ class VectorDatabaseManager:
         try:
             count = self.collection.count()
             
+            # Only attempt to get sample if collection has documents
+            if count == 0:
+                return {
+                    'total_messages': 0,
+                    'unique_groups': 0,
+                    'unique_senders': 0,
+                    'average_message_length': 0,
+                    'collection_name': self.collection_name,
+                    'embedding_model': self.settings.embedding_model
+                }
+            
             # Get sample of recent messages for analysis
             recent_results = self.search_by_metadata(
                 where={}, 
